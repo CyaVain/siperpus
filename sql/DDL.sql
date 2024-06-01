@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS roles, members, 
+categories, books, orders, order_details;
+
 CREATE TABLE roles(
 id INT PRIMARY KEY AUTO_INCREMENT,
 role varchar(20) NOT NULL
@@ -6,14 +9,14 @@ role varchar(20) NOT NULL
 CREATE TABLE members(
 id INT PRIMARY KEY AUTO_INCREMENT,
 nama VARCHAR(40) NOT NULL,
-no_ktp INT NOT NULL,
+no_ktp VARCHAR(20) NOT NULL,
 no_hp VARCHAR(15) NOT NULL,
 alamat_jalan VARCHAR(100) NOT NULL,
 alamat_kota VARCHAR(50) NOT NULL,
-alamat_pronvisi VARCHAR(50) NOT NULL,
+alamat_provinsi VARCHAR(50) NOT NULL,
 email VARCHAR(100) NOT NULL,
 password VARCHAR(20) NOT NULL,
-session VARCHAR(255) NOT NULL,
+session VARCHAR(255),
 roles_id INT NOT NULL,
 FOREIGN KEY (roles_id) REFERENCES roles(id)
 );
@@ -36,20 +39,21 @@ categories_id INT NOT NULL,
 FOREIGN KEY (categories_id) REFERENCES categories(id)
 );
 
-CREATE TABLE order_details(
-id INT PRIMARY KEY AUTO_INCREMENT,
-book_id INT NOT NULL,
-FOREIGN KEY (book_id) REFERENCES books(id)
-);
-
 CREATE TABLE orders(
 id INT PRIMARY KEY AUTO_INCREMENT,
 no_order VARCHAR(255) NOT NULL,
 tanggal_order DATE NOT NULL,
 tanggal_pengembalian DATE NOT NULL,
-denda INT,
 member_id INT NOT NULL,
-order_details_id INT NOT NULL,
-FOREIGN KEY (order_details_id) REFERENCES order_details(id),
+returned boolean,
+denda int,
 FOREIGN KEY (member_id) REFERENCES members(id)
+);
+
+CREATE TABLE order_details(
+id INT PRIMARY KEY AUTO_INCREMENT,
+book_id INT NOT NULL,
+order_id INT NOT NULL,
+FOREIGN KEY (book_id) REFERENCES books(id),
+FOREIGN KEY (order_id) REFERENCES orders(id)
 );
