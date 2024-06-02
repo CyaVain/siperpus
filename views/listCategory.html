@@ -34,6 +34,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="../views/pinjamBuku.html">Pinjam Buku</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../views/tambahBuku.html">Tambah Data Buku</a>
+                        </li>
                     </ul>
                     <div>
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -100,22 +103,48 @@
                 })
                 if (code) {
                     alert('Code Already Exist')
+                    continue
+                }
+                var Name = prompt("Insert Category Name").toLowerCase()
+                if (Name.length > 25) {
+                    alert('Name Too Long, Maximum 25 Letters')
                 }
                 else {
-                    var Name = prompt("Insert Category Name")
-                    if (Name.length > 20) {
-                        alert('Name Too Long, Maximum 20 Letters')
-                    }
-                    else status = false
+                    status = false
                 }
             }
-
             newCategory.Code = newCode
-            newCategory.Name = Name
+            newCategory.Name = Name.charAt(0).toUpperCase() + Name.slice(1)
 
             listCategory.push(newCategory)
             alert("Successfully Added New Category")
             displayTable()
+        }
+
+        function updateCategory(index) {
+            var status = true
+            while (status) {
+                var newCode = prompt("Input New Code").toUpperCase()
+                var existingCategory = listCategory.find(function (c) {
+                    return c.Code === newCode
+                })
+                if (existingCategory) {
+                    alert("Code Already Exist")
+                    continue
+                } var newName = prompt("Insert Category Name").toLowerCase()
+                if (newName.length > 25) {
+                    alert('Name Too Long, Maximum 25 Letters')
+                }
+                else {
+                    status = false
+                }
+            }
+            listCategory[index].Code = newCode;
+            listCategory[index].Name = newName.charAt(0).toUpperCase() + newName.slice(1);
+
+            alert('Sucessfully Update Category')
+            displayTable()
+
         }
 
         function displayTable() {

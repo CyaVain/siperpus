@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../assets/img/logo.png" type="image/icon type">
-    <title>Pinjam Buku</title>
+    <title>Books</title>
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
 </head>
@@ -51,48 +51,68 @@
     </header>
 
     <div class="container my-3 py-2">
-        <h1>Pinjam Buku</h1>
-        <div>
-            <h3> Keranjang</h3>
-            <table class="table table-striped">
-                <thead>
-                    <th> No </th>
-                    <th> Judul</th>
-                    <th> Pengarang</th>
-                    <th> Penerbit</th>
-                    <th> TahunTerbit</th>
-                    <th> Kategori</th>
-                    <th> Action</th>
-                </thead>
-                <tbody id="tableCart">
-                    <tr>
-                        <td colspan="7">Keranjang Masih Kosong</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <h3>Daftar Buku</h3>
-            <table class="table table-striped">
-                <thead>
-                    <th> No</th>
-                    <th> ISBN</th>
-                    <th> Judul</th>
-                    <th> Pengarang</th>
-                    <th> Penerbit</th>
-                    <th> Tahun Terbit</th>
-                    <th> Kategori</th>
-                    <th> Action</th>
-                </thead>
-                <tbody id="tableBuku">
-                </tbody>
-            </table>
+        <h3>Daftar Buku</h3>
+        <button type="button" class="btn btn-success d-grid gap-2 col-3 mx-auto my-3" data-bs-toggle="modal"
+            data-bs-target="#addBookModal">Add
+            New Book</button>
+        <table class="table table-striped">
+            <thead>
+                <th> No</th>
+                <th> ISBN</th>
+                <th> Judul</th>
+                <th> Pengarang</th>
+                <th> Penerbit</th>
+                <th> Tahun Terbit</th>
+                <th> Kategori</th>
+            </thead>
+            <tbody id="tableBuku">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal for adding new book -->
+    <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBookForm">
+                        <div class="mb-3">
+                            <label for="isbn" class="form-label">ISBN</label>
+                            <input type="text" class="form-control" id="isbn" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="judul" class="form-label">Judul</label>
+                            <input type="text" class="form-control" id="judul" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pengarang" class="form-label">Pengarang</label>
+                            <input type="text" class="form-control" id="pengarang" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="penerbit" class="form-label">Penerbit</label>
+                            <input type="text" class="form-control" id="penerbit" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tahunTerbit" class="form-label">Tahun Terbit</label>
+                            <input type="number" class="form-control" id="tahunTerbit" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kategori" class="form-label">Kategori</label>
+                            <input type="text" class="form-control" id="kategori" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Book</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="../bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+    <script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        var cart = []
         var listBuku = [
             {
                 isbn: "9780143127550",
@@ -125,16 +145,28 @@
                 penerbit: "Little, Brown and Company",
                 tahunTerbit: 1951,
                 kategori: "Drama",
-            },
-            {
-                isbn: "9780743273565",
-                judul: "The Great Gatsby",
-                pengarang: "F. Scott Fitzgerald",
-                penerbit: "Scribner",
-                tahunTerbit: 2004,
-                kategori: "Action",
             }
         ]
+
+        document.getElementById('addBookForm').addEventListener('submit', function (event) {
+            var modalForm = document.getElementById('addBookForm')
+            var addBookModal = bootstrap.Modal.getInstance(document.getElementById('addBookModal'))
+            event.preventDefault()
+            var newBook = {
+                isbn: document.getElementById('isbn').value,
+                judul: document.getElementById('judul').value,
+                pengarang: document.getElementById('pengarang').value,
+                penerbit: document.getElementById('penerbit').value,
+                tahunTerbit: document.getElementById('tahunTerbit').value,
+                kategori: document.getElementById('kategori').value,
+            }
+            listBuku.push(newBook)
+            displayTable()
+            alert("Successfully Added New Book")
+
+            modalForm.reset()
+            addBookModal.hide()
+        })
 
         function displayTable() {
             var table = document.getElementById('tableBuku')
@@ -149,70 +181,11 @@
                 <td>${e.penerbit}</td>
                 <td>${e.tahunTerbit}</td>
                 <td>${e.kategori}</td>
-                <td> <button type="button" class="btn btn-primary mx-auto my-3" onclick="pinjamBuku(${index})">Pinjam</button> </td>
                 `
                 table.append(row)
             })
         }
 
-        function displayCart() {
-            var table = document.getElementById('tableCart')
-            table.innerHTML = ""
-            if (cart.length === 0) {
-                var row = document.createElement('tr')
-                row.innerHTML = `<td colspan="7">Keranjang Masih Kosong</td>`
-                table.append(row)
-            }
-            else {
-                cart.forEach(function (e, index) {
-                    var row = document.createElement('tr')
-                    row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${e.judul}</td>
-                <td>${e.pengarang}</td>
-                <td>${e.penerbit}</td>
-                <td>${e.tahunTerbit}</td>
-                <td>${e.kategori}</td>
-                <td> <button type="button" class="btn btn-danger mx-auto my-3" onclick="batalPinjam(${index})">Remove</button> </td>
-                `
-                    table.append(row)
-                })
-                var proceed = document.createElement('button')
-                proceed.innerText = 'Checkout'
-                proceed.className = 'btn btn-success mx-auto my-3'
-                proceed.id = 'checkoutButton'
-                proceed.onclick = checkout
-                table.append(proceed)
-            }
-        }
-
-        function checkout() {
-            var approval = confirm("Anda Yakin Ingin Melakukan Checkout ?")
-            if (approval) {
-                cart.splice(0, cart.length)
-                displayCart()
-                alert("Successfully Checkout")
-            }
-        }
-
-        function batalPinjam(index) {
-            var approval = confirm(`Are You Sure You Want To Remove This Item From Cart ?`)
-            if (approval) {
-                var buku = cart.splice(index, 1).shift()
-                listBuku.push(buku)
-                alert("Successfully Removed Item")
-                displayCart()
-                displayTable()
-            }
-        }
-
-        function pinjamBuku(index) {
-            var buku = listBuku.splice(index, 1).shift()
-            alert("Sukses Meminjam Buku")
-            displayTable()
-            cart.push(buku)
-            displayCart()
-        }
         document.addEventListener('DOMContentLoaded', function () {
             displayTable()
         })
