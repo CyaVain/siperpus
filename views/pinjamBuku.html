@@ -164,10 +164,11 @@
                 <td>${e.penerbit}</td>
                 <td>${e.tahunTerbit}</td>
                 <td>${e.kategori}</td>
-                <td> <button type="button" class="btn btn-danger mx-auto my-3" onclick="batalPinjam(${index})">Cancel</button> </td>
+                <td> <button type="button" class="btn btn-danger mx-auto my-3" onclick="batalPinjam(${index})">Remove</button> </td>
                 `
                 table.append(row)
             })
+            var proceed = document.createElement('button')
         }
 
         function batalPinjam(index) {
