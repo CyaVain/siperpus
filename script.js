@@ -46,17 +46,20 @@ const dendaHarian = 1000
 const dendaMax = 30000
 
 //FORMAT DATE YYYY-MM-DD
-var tanggalPinjam = new Date( "2024-10-01" )
-var tanggalKembali = new Date( "2024-10-20" )
-var bukuYangDiPinjam = [1,2,3,4,5,6]
+var tanggalPinjam = new Date( "2024-10-15" )
+var tanggalKembali = new Date( "2024-10-14" )
+var bukuYangDiPinjam = [1,2,4]
 
-var totalDenda
 var dendaPerBuku = []
 
 function hitungDenda(tanggalPinjam,tanggalKembali, bukuYangDiPinjam){
+    // Validasi Tanggal Pengembalian
+    if(tanggalKembali < tanggalPinjam){
+        return console.log("## Tanggal Pengembalian Tidak Boleh Kurang Dari Tanggal Pinjam ##")
+    }
     // Validasi Jumlah Buku Yang Dipinjam
     if(bukuYangDiPinjam.length > listBuku.length){
-        return console.log("## Jumlah Buku Yang Dipinjam Tidak Valid ##")
+        return console.log("## Jumlah Buku Yang Dipinjam Lebih Banyak Dari Ketersediaan Buku ##")
     }
 
     // Validasi Buku Yang Dipinjam
@@ -68,5 +71,43 @@ function hitungDenda(tanggalPinjam,tanggalKembali, bukuYangDiPinjam){
         if(!buku){
             return console.log("## BUKU TIDAK VALID / TIDAK ADA ##")
         }
+
+        // Jika Meminjam Buku Yang Sama
+    var checker = []
+    for(var i = 0; i < bukuYangDiPinjam.length; i++){
+        if(checker.includes(bukuYangDiPinjam[i])){
+            return console.log("## BUKU YANG SAMA TIDAK BISA DIPINJAM BERSAMAAN")
+        }
+        else checker[i] = bukuYangDiPinjam[i]
+    }
+
+    // Hitung Selisih
+    var selisih = tanggalKembali.getDate() - tanggalPinjam.getDate()
+    if(selisih <= batasMaxPinjam){
+        console.log("## Pinjaman Tidak Dikenakan Kenda Apapun Dikarenakan Pengembalian Masih Dibawah Dari Maximal Pengembalian ##")
+        return console.log(`Durasi Pinjaman : ${selisih} Hari`)
+    }
+
+    // Menghitung Denda
+    var denda = ((selisih - batasMaxPinjam) * dendaHarian) * bukuYangDiPinjam.length
+    if(denda > dendaMax) denda = 30000
+    
+    var totalDenda = 0;
+    bukuYangDiPinjam.forEach(function(e){
+        var buku = listBuku.find(function(b){
+            if(b.id === e){
+                return b
+            }
+        })
+        var b = {}
+        b.id = buku.id
+        b.judul = buku.judul
+        b.denda = denda
+        dendaPerBuku.push(b)
+
+        totalDenda += denda
+    })
+
+    return {totalDenda, dendaPerBuku}
     }
 }
