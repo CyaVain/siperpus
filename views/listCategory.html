@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../assets/img/logo.png" type="image/icon type">
+    <title>Categories</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../bootstrap-5.3.3-dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <div>
+                    <a class="navbar-brand" href="../index.html"> <img src="../assets//img/logo.png" alt="logo"
+                            style="max-height: 75px;"></a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="../index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../views/listCategory.html">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../views/pinjamBuku.html">Pinjam Buku</a>
+                        </li>
+                    </ul>
+                    <div>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="../views/login.html">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Categories</h1>
+        <div>
+            <button onclick="addCategory()" type="button" class="btn btn-primary d-grid gap-2 col-3 mx-auto my-3">Add
+                New Category</button>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <th> No</th>
+                <th> Kode</th>
+                <th> Nama</th>
+                <th colspan="2"> Action</th>
+            </thead>
+            <tbody id="tableCategory">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="../bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+    <script>
+        var listCategory = [
+            {
+                Code: "FIC",
+                Name: "Fiction"
+            },
+            {
+                Code: "SCI-FIC",
+                Name: "Science-Fiction"
+            },
+            {
+                Code: "ROM-COM",
+                Name: "Romance-Comedy"
+            },
+            {
+                Code: "DRM",
+                Name: "Drama"
+            },
+            {
+                Code: "ACT",
+                Name: "Action"
+            }
+        ]
+
+        function addCategory() {
+            var newCategory = {}
+            var status = true
+            while (status) {
+                var newCode = prompt("Insert Category Code").toUpperCase()
+                var code = listCategory.find(function (e) {
+                    return e.Code == newCode
+                })
+                if (code) {
+                    alert('Code Already Exist')
+                }
+                else {
+                    var Name = prompt("Insert Category Name")
+                    if (Name.length > 20) {
+                        alert('Name Too Long, Maximum 20 Letters')
+                    }
+                    else status = false
+                }
+            }
+
+            newCategory.Code = newCode
+            newCategory.Name = Name
+
+            listCategory.push(newCategory)
+            alert("Successfully Added New Category")
+            displayTable()
+        }
+
+        function displayTable() {
+            var table = document.getElementById('tableCategory')
+            table.innerHTML = ""
+            listCategory.forEach(function (e, index) {
+                var row = document.createElement('tr')
+                row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${e.Code}</td>
+                <td>${e.Name}</td>
+                <td> <button type="button" class="btn btn-warning mx-auto my-3" onclick="updateCategory(${index})">Update</button> </td>
+                <td> <button type="button" class="btn btn-danger mx-auto my-3" onclick="deleteCategory(${index})">Delete</button> </td>
+                `
+                table.append(row)
+            })
+        }
+
+        function deleteCategory(index) {
+            var code = listCategory[index].Code
+            var name = listCategory[index].Name
+            var approval = confirm(`Are You Sure You Want To Delete \n Code: ${code} \n Name: ${name} ?`)
+            if (approval) {
+                listCategory.splice(index, 1)
+                alert("Successfully Deleted")
+                displayTable()
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            displayTable()
+        })
+    </script>
+</body>
+
+</html>
