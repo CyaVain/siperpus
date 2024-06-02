@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS roles, members, 
+DROP TABLE IF EXISTS roles, members,
 categories, books, orders, order_details;
 
 CREATE TABLE roles(
