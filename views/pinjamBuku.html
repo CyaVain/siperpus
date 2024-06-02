@@ -47,8 +47,27 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container my-3 py-2">
         <h1>Pinjam Buku</h1>
+        <div>
+            <h3> Keranjang</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th> No </th>
+                    <th> Judul</th>
+                    <th> Pengarang</th>
+                    <th> Penerbit</th>
+                    <th> TahunTerbit</th>
+                    <th> Kategori</th>
+                    <th> Action</th>
+                </thead>
+                <tbody id="tableCart">
+                    <tr>
+                        <td colspan="7">Keranjang Masih Kosong</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div>
             <h3>Daftar Buku</h3>
             <table class="table table-striped">
@@ -70,6 +89,7 @@
 
     <script src="../bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
     <script>
+        var cart = []
         var listBuku = [
             {
                 isbn: "9780143127550",
@@ -130,6 +150,43 @@
                 `
                 table.append(row)
             })
+        }
+
+        function displayCart() {
+            var table = document.getElementById('tableCart')
+            table.innerHTML = ""
+            cart.forEach(function (e, index) {
+                var row = document.createElement('tr')
+                row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${e.judul}</td>
+                <td>${e.pengarang}</td>
+                <td>${e.penerbit}</td>
+                <td>${e.tahunTerbit}</td>
+                <td>${e.kategori}</td>
+                <td> <button type="button" class="btn btn-danger mx-auto my-3" onclick="batalPinjam(${index})">Cancel</button> </td>
+                `
+                table.append(row)
+            })
+        }
+
+        function batalPinjam(index) {
+            var approval = confirm(`Are You Sure You Want To Remove This Item From Cart ?`)
+            if (approval) {
+                var buku = cart.splice(index, 1).shift()
+                listBuku.push(buku)
+                alert("Successfully Removed Item")
+                displayCart()
+                displayTable()
+            }
+        }
+
+        function pinjamBuku(index) {
+            var buku = listBuku.splice(index, 1).shift()
+            alert("Sukses Meminjam Buku")
+            displayTable()
+            cart.push(buku)
+            displayCart()
         }
         document.addEventListener('DOMContentLoaded', function () {
             displayTable()
